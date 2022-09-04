@@ -1,0 +1,11 @@
+---
+# handlers file for mongodb
+- name: Reload system configuration
+  systemd:
+    daemon_reload: yes
+
+- name: Start mongod
+  service:
+    name: mongod
+    state: started
+    enabled: yes

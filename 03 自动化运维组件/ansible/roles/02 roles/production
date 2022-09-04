@@ -1,0 +1,6 @@
+[web]
+192.168.1.40 nginx_port=8080 keepalived_vip=192.168.1.112 keepalived_role=MASTER
+192.168.1.111 nginx_port=8080 keepalived_vip=192.168.1.112 keepalived_role=BACKUP mysql_port=3358
+
+[db]
+192.168.1.40 mysql_port=3358

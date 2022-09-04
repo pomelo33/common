@@ -1,0 +1,56 @@
+- name: modify hosts
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"
+
+- name: copy package
+  copy:
+    src: mongodb-linux-x86_64-3.4.17.tgz
+    dest: /tmp/
+
+- name: unzip package
+  unarchive:
+    src: /tmp/mongodb-linux-x86_64-3.4.17.tgz
+    dest: "{{ var_installpath }}"
+    copy: no
+  ignore_errors: True
+- name: Delete mongo package
+  file:
+    name: /tmp/mongodb-linux-x86_64-3.4.17.tgz
+    state: absent
+- name: change dirname
+  shell: "mv {{ var_installpath }}/mongodb-linux-x86_64-3.4.17 {{ var_installpath }}/mongodb"
+  ignore_errors: True
+
+- name: create dir
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_conf_path }}"
+    - "{{ var_mongos_logs_path }}"
+    - "{{ var_config_data_path }}"
+    - "{{ var_config_logs_path }}"
+    - "{{ var_shard1_data_path }}"
+    - "{{ var_shard1_logs_path }}"
+    - "{{ var_shard2_data_path }}"
+    - "{{ var_shard2_logs_path }}"
+    - "{{ var_shard3_data_path }}"
+    - "{{ var_shard3_logs_path }}"
+
+- name: add env
+  lineinfile:
+    path: /etc/profile
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "export MONGODB_HOME={{ var_workerpath }}"
+    - "export PATH=$MONGODB_HOME/bin:$PATH"
+
+- name: reload env
+  shell: source /etc/profile
+  ignore_errors: True

@@ -1,0 +1,39 @@
+#### 1.定义ip列表，用于收集主机公钥
+```
+$ cat ip.txt 
+10.0.1.57
+10.0.1.67
+10.0.1.75
+$ ssh-keyscan -f ip.txt -p 52919 >> ~/.ssh/known_hosts 
+参数说明：
+1. -f ：指定收集主机列表文件
+2. -p：指定目标主机ssh的端口
+
+```
+
+#### 2.定义inventory列表，并执行命令
+```
+# 用于定义inventory
+$ cat monitor_hosts
+# 定义所有节点的环境变量
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_port=52919
+ansible_ssh_user=root
+ansible_ssh_pass='Tuishou.root'
+
+# 定义针对node分组的环境变量
+[nodes:vars]
+ansible_connection=ssh
+ansible_ssh_port=52919
+ansible_ssh_user=root
+ansible_ssh_pass='Tuishou.root'
+
+[nodes]
+10.0.1.45
+10.0.1.46
+
+# 执行ansible命令，验证是否连接正常
+$ ansible <主机分组或全部主机(all)> -i <指定inventory列表> -m <指定命令的模块>
+$ ansible n9e-agent -i monitor_hosts -m ping 
+```

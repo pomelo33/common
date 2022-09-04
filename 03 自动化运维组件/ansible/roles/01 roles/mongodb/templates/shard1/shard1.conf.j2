@@ -1,0 +1,12 @@
+pidfilepath = {{ var_shard1_logs_path }}/shard1.pid
+dbpath = {{ var_shard1_data_path }}
+logpath = {{ var_shard1_logs_path }}/shard1.log
+logappend = true
+bind_ip = {{var_listen_address  }}
+port = {{ var_shard1_port }}
+fork = true
+httpinterface=true
+rest=true
+replSet={{ var_shard1_name }}
+shardsvr = true
+maxConns=20000

@@ -1,0 +1,95 @@
+- name: modify hosts
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"
+
+- name: change systctl
+  lineinfile:
+    path: /etc/sysctl.conf
+    state: present
+    line: "vm.max_map_count=262144" 
+
+- name: reload sysctl
+  shell: "sysctl -p"
+  no_log: True
+
+- name: create user
+  user:
+    name: "{{ item.name }}"
+    password: "{{ item.pass | password_hash('sha512') }}"
+    state: present
+    update_password: on_create
+  with_items:
+    - { name: "{{ var_username }}" ,pass: "{{ var_password }}" }
+
+- name: check user
+  shell: getent passwd "{{ item }}"
+  with_items:
+    - "{{ var_username }}"
+
+- name: create data and log dir
+  file:
+    path: "{{ item }}"
+    mode: 0755
+    state: directory
+    owner: "{{ var_username }}"
+    group: "{{ var_group }}"
+  with_items:
+    - "{{ var_datapath }}"
+    - "{{ var_logspath }}"
+
+- name: copy file
+  copy:
+    src: elasticsearch-7.8.0-linux-x86_64.tar.gz
+    dest: /tmp/elasticsearch-7.8.0-linux-x86_64.tar.gz
+
+- name: unzip package
+  unarchive:
+    src: /tmp/elasticsearch-7.8.0-linux-x86_64.tar.gz
+    dest: "{{ var_installpath }}"
+    copy: no
+    owner: "{{ var_username }}"
+    group: "{{ var_group }}"
+
+- name: change dirname
+  shell: mv "{{ var_installpath }}/elasticsearch-7.8.0" "{{ var_installpath }}/elasticsearch"
+
+- name: backup default config
+  shell: mv "{{ var_installpath }}/elasticsearch/config/elasticsearch.yml" "{{ var_installpath }}/elasticsearch/config/elasticsearch.yml.bak"
+
+- name: modify single config
+  template:
+    src: elasticsearch.yml.j2
+    dest: "{{ var_installpath }}/elasticsearch/config/elasticsearch.yml"
+    owner: "{{ var_username }}"
+    group: "{{ var_group }}"
+    backup: yes
+  when:
+    - "(groups['elasticsearch'] | length) == 1"
+
+- name: modify cluster config
+  template:
+    src: elasticsearch_cluster.yml.j2
+    dest: "{{ var_installpath }}/elasticsearch/config/elasticsearch.yml"
+    owner: "{{ var_username }}"
+    group: "{{ var_group }}"
+    backup: yes
+  when:
+    - "(groups['elasticsearch'] | length) > 1"
+
+- name: create service config
+  template:
+    src: elasticsearch.service.j2
+    dest: "{{ var_servicepath }}/elasticsearch.service"
+  notify:
+    - reload systemd configuration
+    - restart elasticsearch
+
+- name: Delete package
+  file:
+    path: /tmp/elasticsearch-7.8.0-linux-x86_64.tar.gz
+    state: absent

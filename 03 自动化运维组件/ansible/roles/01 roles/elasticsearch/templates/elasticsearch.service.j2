@@ -1,0 +1,30 @@
+[Unit]
+Description=Elasticsearch
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{ var_username }}
+Group={{ var_group }}
+Type=simple
+Environment=JAVA_HOME={{ var_jdkpath }}
+Environment=ES_HOME={{ var_workerpath }}
+Environment=ES_PATH_CONF={{ var_configpath }}
+Environment=ES_STARTUP_SLEEP_TIME=5
+WorkingDirectory={{ var_workerpath }}
+ExecStart={{ var_workerpath }}/bin/elasticsearch -p {{ var_workerpath }}/elasticsearch.pid
+StandardOutput=journal
+StandardError=inherit
+LimitNOFILE=65536
+LimitNPROC=4096
+LimitAS=infinity
+LimitFSIZE=infinity
+TimeoutStopSec=0
+KillSignal=SIGTERM
+KillMode=process
+SendSIGKILL=no
+SuccessExitStatus=143
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

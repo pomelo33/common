@@ -1,0 +1,12 @@
+{%- set servers=[] -%}
+{% for host in (groups['mongod'] | map('extract',hostvars,'ansible_ssh_host') | list) %}
+  {{- servers.append(host + ":" + var_configs_port) -}}
+{% endfor %}
+pidfilepath = {{ var_mongos_logs_path }}/mongos.pid
+logpath = {{ var_mongos_logs_path }}/mongos.log
+logappend = true
+bind_ip = {{ var_listen_address }}
+port = {{ var_mongos_port }}
+fork = true
+configdb = {{ var_configs_name }}/{{ servers | join(",")}}
+maxConns=20000

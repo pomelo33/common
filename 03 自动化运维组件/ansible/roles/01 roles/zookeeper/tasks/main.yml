@@ -1,0 +1,6 @@
+---
+# tasks file for zookeeper
+- name: Uninstall zookeeper
+  include: uninstall.yml
+- name: install zookeeper
+  include: setup.yml

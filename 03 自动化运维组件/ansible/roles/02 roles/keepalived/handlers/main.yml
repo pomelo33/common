@@ -1,0 +1,7 @@
+---
+# handlers file for keepalived
+- name: restart keepalived
+  service:
+    name: keepalived
+    state: restart
+    daemon-reload: yes

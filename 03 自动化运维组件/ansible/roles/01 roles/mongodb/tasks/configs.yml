@@ -1,0 +1,26 @@
+- name: Create the configs server configuration file
+  template:
+    src: configs/config.conf.j2
+    dest: "{{ var_conf_path }}/config.conf"
+  
+- name: Start mongod config server
+  shell: "{{ var_workerpath }}/bin/mongod -f {{ var_conf_path }}/config.conf"
+
+- wait_for:
+    port: "{{ var_configs_port }}"
+    delay: 3
+
+- name: Create the file to initialize the configs replica set
+  template:
+    src: configs/config_init.js.j2
+    dest: /tmp/config_init.js
+
+- name: Initialize the replication set
+  shell:  "{{ var_workerpath }}/bin/mongo localhost:{{ var_configs_port }} /tmp/config_init.js"
+  run_once: true
+  delegate_to: "{{ groups['mongod'][0] }}" 
+
+- name: Delete initialize file
+  file:
+    path: /tmp/config_init.js
+    state: absent

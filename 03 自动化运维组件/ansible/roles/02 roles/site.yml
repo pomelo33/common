@@ -1,0 +1,9 @@
+---
+- hosts: all
+  pre_tasks:
+  - include: roles/init.yml
+  roles:
+  - { role: nginx, when: '"web" in group_names' }
+  - { role: keepalived, when: '"web" in group_names' }
+  - { role: mariadb, when: '"db" in group_names' }
+

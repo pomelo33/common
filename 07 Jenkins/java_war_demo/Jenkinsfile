@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    stages {
+        // 拉取代码
+        stage('pull code') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/${branch}']], extensions: [], userRemoteConfigs: [[credentialsId: 'xxxxx', url: 'git@xxxxxx:dev/xxxx.git']]])
+            }
+        }
+
+        // 代码检查
+        stage('code checking') {
+            steps {
+                script {
+                    // 引入SonarQubeScanner工具
+                    scannerHome = tool 'sonar-scanner'
+                }
+                // 引入SonarQube的服务器环境
+                withSonarQubeEnv('sonarqube') {
+                     sh "export JAVA_HOME=xxxxx && ${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }    
+        
+        // 构建项目
+        stage('build project') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    
+        // 部署项目
+        stage('publish project') {
+            steps {
+                deploy adapters: [tomcat9(credentialsId: 'xxxxx', path: '', url: 'http://xxxxxxx:8080/')], contextPath: null, war: 'target/*.war'
+            }
+        }        
+    }
+    // 构建后操作
+    post {
+        always {
+            emailext (
+                // 发件内容
+                body: '${FILE,path="email.html"}', 
+                // 发送标题
+                subject: '构建通知： ${PROJECT_NAME} - Build # ${BUILD_NUMBER}  - ${BUILD_STATUS}!', 
+                // 收件人
+                to: 'xxxxxxxxx@qq.com'
+            )
+            sh 'touch /tmp/$(date "+%Y%m%d_%H%M%S")'
+        }
+    }
+}

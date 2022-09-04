@@ -1,0 +1,6 @@
+---
+# tasks file for redis
+- name: Uninstall redis
+  include: uninstall.yml
+# - name: install redis
+#   include: setup.yml

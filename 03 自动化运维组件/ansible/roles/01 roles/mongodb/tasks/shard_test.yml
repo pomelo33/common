@@ -1,0 +1,20 @@
+- name: Create test shard file
+  template:
+    src: shard_test.js.j2
+    dest: /tmp/shard_test.js
+  run_once: true
+  delegate_to: "{{ groups['mongod'][0] }}"
+- name: Run shard test on {{ groups['mongod'][0] }}
+  shell: "{{ var_workerpath }}/bin/mongo localhost:{{ var_mongos_port }}/test /tmp/shard_test.js"
+  run_once: true
+  delegate_to: "{{ groups['mongod'][0] }}"
+  register: shard_test_result
+- name: output shard test result
+  debug:
+    msg: "{{ shard_test_result.stdout }}"
+  run_once: true
+  delegate_to: "{{ groups['mongod'][0] }}"
+# - name: Delete shard test file
+#   file:
+#     path: /tmp/shard_test.js
+#     state: absent

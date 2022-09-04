@@ -1,0 +1,19 @@
+- name: Stop mongos and mongod
+  shell: killall mongos && killall mongod
+- name: Copy mongod service file
+  template:
+    src: mongodb.service.j2
+    dest: "{{  var_servicepath  }}"
+- name: Copy runngin mongo script
+  template:
+    src: run_mongoCluster.sh.j2
+    dest: "{{ var_runscript }}/run_mongoCluster.sh"
+    mode: 0755
+  notify:
+    - reload system configuration
+    - restart mongod
+- name: Install succeed !
+  shell: "echo The installation is successful. Remember to delete the test Database!"
+  register: install
+- debug:
+    msg: "{{ install.stdout }}"

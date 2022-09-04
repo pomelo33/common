@@ -1,0 +1,11 @@
+[Unit]
+Description=start mongo cluster
+After=network.target
+
+[Service]
+ExecStart=/root/start_mongo.sh start
+ExecStop=/root/start_mongo.sh stop
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

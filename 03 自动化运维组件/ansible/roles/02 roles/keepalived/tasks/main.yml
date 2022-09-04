@@ -1,0 +1,21 @@
+---
+# tasks file for keepalived
+- name: install keepalived
+  yum:
+    name: keepalived
+- name: copy check script
+  copy:
+    src: check_nginx.sh
+    dest: /etc/keepalived/check_nginx.sh
+    mode: 0744
+- name: upload config
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    notify: restart keepalived
+- name: service keeaplived
+  service:
+    name: keepalived
+    state: started
+    enabled: yes
+  ignore_errors: True

@@ -1,0 +1,27 @@
+---
+# vars file for elasticsearch_cluster
+# elasticsearch username
+var_username: "elastic"
+var_group: "elastic"
+var_password: "elastic"
+
+# elasticsearch data and logs path
+var_datapaths: /data/elasticsearch
+var_datapath: /data/elasticsearch/data
+var_logspath: /data/elasticsearch/logs
+
+# elasticsearch install path
+var_installpath: /usr/local/
+
+# elasticsearch service config 
+var_servicepath: /usr/lib/systemd/system
+
+# elasticsearch worker path
+var_workerpath: /usr/local/elasticsearch
+var_jdkpath: /usr/local/elasticsearch/jdk
+var_configpath: /usr/local/elasticsearch/config
+
+# elasticsearch parameter
+var_listen_address: "0.0.0.0"
+var_listen_port: "9200"
+var_signal_communication: "9300"

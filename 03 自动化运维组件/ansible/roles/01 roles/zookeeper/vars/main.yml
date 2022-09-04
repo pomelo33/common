@@ -1,0 +1,19 @@
+---
+# vars file for zookeeper
+# zookeeper install path
+var_installpath: /usr/local
+var_packagename: "zookeeper-3.4.6.tar.gz"
+var_packageshortname: "zookeeper-3.4.6"
+# zookeeper data path
+var_datapath: /data/zookeeper/
+
+# zookeeper worker dir
+var_workerpath: /usr/local/zookeeper
+
+# zookeeper service file name
+var_servicefile: /usr/lib/systemd/system/zookeeper.service
+
+# zookeeper listen port
+var_port: 2181
+
+var_jdkpath: /usr/java/jdk1.8.0_301

@@ -1,0 +1,5 @@
+# 单用户修改密码:uername  password ip:port oldpassswd newpasswd user
+# eg: weblogic weblogic1 127.0.0.1:7001 weblogic1 weblogic123 user01
+# 多用户修改密码:username password ip:port oldpasswd newpasswd users
+# eg: weblogic weblogic1 127.0.0.1:7001 weblogic1 weblogic123 user01,user02
+weblogic weblogic1 127.0.0.1:7001 weblogic1 weblogic123 user01

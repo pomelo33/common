@@ -1,0 +1,5 @@
+---
+# vars file for mariadb
+mysql_root_passwd: "!QAZ2wsx"
+mysql_user: "pomelo"
+mysql_user_passwd: "$RFV5tgb"

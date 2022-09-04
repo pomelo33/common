@@ -1,0 +1,4 @@
+---
+# tasks file for elasticsearch_cluster
+- include: uninstall.yml
+# - include: install.yml

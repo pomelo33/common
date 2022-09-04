@@ -1,0 +1,10 @@
+config = {
+    _id : "{{ var_configs_name }}",
+    members : [
+    {% for host in (groups['mongod'] | map('extract',hostvars,'ansible_ssh_host') | list) %}
+      {_id : {{ loop.index }}, host : "{{ host }}:{{ var_configs_port }}" },
+    {% endfor %}
+]
+};
+rs.initiate(config);
+printjson(rs.status());

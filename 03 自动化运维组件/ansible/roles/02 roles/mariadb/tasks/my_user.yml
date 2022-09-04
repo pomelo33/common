@@ -1,0 +1,10 @@
+- name: alter root passwd
+  shell: mysql -u root -P {{ mysql_port }} -e "SET password for 'root'@'localhost'=password('{{ mysql_root_passwd }}')"
+- name: create user
+  shell: mysql -u root -p''{{ mysql_root_passwd }}'' -P {{ mysql_port }} -e "CREATE USER '{{ mysql_user }}'@'%' IDENTIFIED BY '{{ mysql_user_passwd }}'"  
+- name: grants user
+  shell: mysql -u root -p''{{ mysql_root_passwd }}'' -P {{ mysql_port }} -e "GRANT ALL ON *.* TO '{{ mysql_user }}'@'%';"  
+  #- name: add secret plugin
+  #  shell: mysql -u root -p{{ mysql_root_passwd }} -P {{ mysql_port }} -e  "update mysql.user set plugin='mysql_native_password';flush privileges;"
+- name: create database
+  shell: mysql -u root -p''{{ mysql_root_passwd }}'' -P {{ mysql_port }} -e "CREATE DATABASE {{ mysql_user }}"  

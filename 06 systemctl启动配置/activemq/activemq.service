@@ -1,0 +1,18 @@
+[Unit]
+Description=ActiveMQ service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/activemq/bin/activemq start
+ExecStop=/usr/local/activemq/bin/activemq stop
+User=root
+Group=root
+Restart=always
+RestartSec=9
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=activemq
+
+[Install]
+WantedBy=multi-user.target

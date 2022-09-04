@@ -1,0 +1,10 @@
+pidfilepath = {{ var_config_logs_path }}/configsrv.pid
+dbpath = {{ var_config_data_path }}
+logpath = {{ var_config_logs_path }}/congigsrv.log
+logappend = true
+bind_ip = {{ var_listen_address }}
+port = {{ var_configs_port }}
+fork = true
+configsvr = true
+replSet={{ var_configs_name }}
+maxConns=20000

@@ -1,0 +1,66 @@
+- name: Stop mongod service
+  service:
+    name: mongod
+    enabled: no
+    state: stopped
+  ignore_errors: yes
+
+- name: Kill mmongo
+  shell: killall mongod && killall mongos
+  ignore_errors: yes
+
+- name: Delete mongod service file
+  file:
+    name: "{{ var_servicepath }}"
+    state: absent
+  ignore_errors: yes
+
+- name: Delete mongod running srcipt
+  file:
+    name: "{{ var_runscript }}/run_mongoCluster.sh"
+    state: absent
+  ignore_errors: yes
+
+- name: Delete data and logs dir
+  file:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ var_conf_path }}"
+    - "{{ var_mongos_logs_path }}"
+    - "{{ var_config_data_path }}"
+    - "{{ var_config_logs_path }}"
+    - "{{ var_shard1_data_path }}"
+    - "{{ var_shard1_logs_path }}"
+    - "{{ var_shard2_data_path }}"
+    - "{{ var_shard2_logs_path }}"
+    - "{{ var_shard3_data_path }}"
+    - "{{ var_shard3_logs_path }}"
+  ignore_errors: yes
+
+- name: Delete mongod worker dir
+  file:
+    name: "{{ var_workerpath }}"
+    state: absent
+  ignore_errors: yes
+
+- name: Delete mongo hosts
+  lineinfile:
+    path: /etc/hosts
+    state: absent
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"
+
+- name: Delete mongo js file
+  file:
+    name: "/tmp/{{ item }}"
+    state: absent
+  with_items:
+    - "config_init.js"
+    - "mongos_init.js"
+    - "shard1_init.js"
+    - "shard2_init.js"
+    - "shard3_init.js"
+  ignore_errors: yes

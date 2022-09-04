@@ -1,0 +1,10 @@
+---
+- hosts: all
+  pre_tasks:
+    - include: init.yml
+  roles:
+    - { role: zookeeper, when: '"zookeeper" in group_names'}
+    # elasticsearch: cluster.name is an environment variable
+    - { role: elasticsearch, when: '"elasticsearch" in group_names',es_config: {cluster.name: "test"}}
+    # mongo: Build only support less than 3 nodes
+    - { role: mongodb, when: '"mongod" in group_names and (groups["mongod"] | length) <= 3'}

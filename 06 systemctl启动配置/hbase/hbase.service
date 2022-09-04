@@ -1,0 +1,15 @@
+[Unit]
+Description=Hbase Service unit Configuration
+After=network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME=/usr/java/jdk1.8.0_45
+ExecStart=/usr/local/hbase/bin/start-hbase.sh
+ExecStop=/usr/local/hbase/bin/stop-hbase.sh
+KillMode=none
+User=root
+Group=root
+Restart=always
+[Install]
+WantedBy=multi-user.target

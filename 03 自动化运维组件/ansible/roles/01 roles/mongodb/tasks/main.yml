@@ -1,0 +1,13 @@
+---
+# tasks file for mongodb
+- name: Uninstabll mongod
+  include: uninstall.yml
+- name: Install mongod
+  include: setup.yml
+- include: configs.yml
+- include: shard1.yml
+- include: shard2.yml
+- include: shard3.yml
+- include: mongos.yml
+- include: shard_test.yml
+- include: start_mongo.yml

@@ -1,0 +1,36 @@
+#创建节点启动脚本，每个节点均要创建
+# vi  /home/weblogic/start/sotower1.sh
+#!/bin/bash
+DATE=`date +%Y%m%d%H%M%S`
+user=`whoami`
+logDir=/app/logs/dljy
+logDestdir=/app/logs/archivelog/dljy
+domainBase=/app/weblogic/user_projects/domains
+domainName=test11g_domain
+adminUrl=10.1.17.10
+adminPort=27001
+serverName= sotower1
+
+if [ "$user" = "root" ]; then
+    echo "root 不能执行此操作"
+else
+        pid=`ps -ef|grep "Name=$serverName"|grep -v grep|awk '{print $2}'`
+        if [ $pid ] ; then
+                echo "service still active, killing..."
+                kill -9 $pid    
+        else            
+                echo "sevice stopped."
+        fi
+cd $logDir
+gzip -c $serverName.log > $logDestdir/${DATE}_$serverName.gz
+
+cat /dev/null > $serverName.log
+sleep 3
+
+cd $domainBase/$domainName/bin
+export USER_MEM_ARGS="-Xms4096m -Xmx4096m -XX:MaxPermSize=512m -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./heapdump_$$_${serverName}_`date +%Y%m%d%H%M%S`.hprof  -Xloggc:gc_$$_${serverName}_`date +%Y%m%d%H%M%S`.log"
+
+nohup ./startManagedWebLogic.sh $serverName $adminUrl:$adminPort > $logDir/$serverName.log &
+tail -f $logDir/$serverName.log
+fi
+备注：具体JVM内存配置在启动脚本中进行配置，具体JVM内存配置大小，参照本规范3.5章节“配置java虚拟机内存”

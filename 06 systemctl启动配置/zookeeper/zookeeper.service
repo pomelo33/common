@@ -1,0 +1,16 @@
+[Unit]
+Description=Zookeeper Service unit Configuration
+After=network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME=/usr/java/jdk1.8.0_45
+ExecStart=/usr/local/zookeeper/bin/zkServer.sh start /usr/local/zookeeper/conf/zoo.cfg
+ExecStop=/usr/local/zookeeper/bin/zkServer.sh stop
+PIDFile=/usr/local/zookeeper/data/zookeeper_server.pid
+KillMode=none
+User=root
+Group=root
+Restart=always
+[Install]
+WantedBy=multi-user.target

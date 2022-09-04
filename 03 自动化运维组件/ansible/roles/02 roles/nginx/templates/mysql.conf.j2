@@ -1,0 +1,14 @@
+stream {
+    map $ssl_preread_server_name $name {
+        db.pomelo.com.cn mysql;
+    }
+    upstream mysql {
+       server localhost:{{ mysql_port }} weight=1 max_fails=3 fail_timeout=30s;
+    }
+    server {
+        listen 10000;
+        proxy_pass mysql;
+        proxy_connect_timeout 10s;
+        proxy_timeout 30s;
+    }
+}

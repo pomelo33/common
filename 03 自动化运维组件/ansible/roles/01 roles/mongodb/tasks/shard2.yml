@@ -1,0 +1,26 @@
+- name: Create the shard2 server configuration file
+  template:
+    src: shard2/shard2.conf.j2
+    dest: "{{ var_conf_path }}/shard2.conf"
+  
+- name: Start mongod shard2 server
+  shell: "{{ var_workerpath }}/bin/mongod  -f {{ var_conf_path }}/shard2.conf"
+
+- wait_for:
+    port: "{{ var_configs_port }}"
+    delay: 3
+
+- name: Create the file to initialize the shard2 replica set
+  template:
+    src: shard2/shard2_init.js.j2
+    dest: /tmp/shard2_init.js
+
+- name: Initialize the replication set
+  shell:  "{{ var_workerpath }}/bin/mongo localhost:{{ var_shard2_port }}/admin /tmp/shard2_init.js"
+  run_once: true
+  delegate_to: "{{ groups['mongod'][1] }}"
+
+- name: Delete initialize file
+  file:
+    path: /tmp/shard2_init.js
+    state: absent

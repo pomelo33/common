@@ -1,0 +1,14 @@
+config = {
+    _id : "{{ var_shard1_name }}",
+    members : [
+    {% for host in (groups['mongod'] | map('extract',hostvars,'ansible_ssh_host') | list) %}
+      {%- if loop.index ==  3 -%}
+      {_id : {{ loop.index }}, host : "{{ host }}:{{ var_shard1_port }}" , arbiterOnly: true },
+      {%- else -%}
+      {_id : {{ loop.index }}, host : "{{ host }}:{{ var_shard1_port }}" },
+      {%- endif -%}
+    {% endfor %}
+]
+};
+rs.initiate(config);
+printjson(rs.status());

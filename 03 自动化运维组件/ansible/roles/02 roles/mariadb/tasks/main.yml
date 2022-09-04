@@ -1,0 +1,7 @@
+---
+# tasks file for mariadb
+- include: remove.yml
+- include: install_mariadb.yml
+- include: upload_config.yml
+- include: service.yml
+- include: my_user.yml

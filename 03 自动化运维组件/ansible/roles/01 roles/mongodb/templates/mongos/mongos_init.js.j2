@@ -1,0 +1,16 @@
+{%- set shard1=[] -%}
+{%- set shard2=[] -%}
+{%- set shard3=[] -%}
+{% for host in (groups['mongod'] | map('extract',hostvars,'ansible_ssh_host') | list) %}
+    {{ shard1.append(host + ":" + var_shard1_port) }}
+{% endfor %}
+{% for host in (groups['mongod'] | map('extract',hostvars,'ansible_ssh_host') | list) %}
+    {{ shard2.append(host + ":" + var_shard2_port) }}
+{% endfor %}
+{% for host in (groups['mongod'] | map('extract',hostvars,'ansible_ssh_host') | list) %}
+    {{ shard3.append(host + ":" + var_shard3_port) }}
+{% endfor %}
+sh.addShard("shard1/{{ shard1 | join(',') }}");
+sh.addShard("shard2/{{ shard2 | join(',') }}");
+sh.addShard("shard3/{{ shard3 | join(',') }}");
+printjson(sh.status());

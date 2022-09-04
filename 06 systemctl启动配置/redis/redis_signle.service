@@ -1,0 +1,14 @@
+# path: /usr/lib/systemd/system/redis.service
+[Unit]
+Description=Redis
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/redis/bin/redis-server /usr/local/redis/etc/redis.conf
+ExecReload=/usr/local/redis/bin/redis-server -s reload
+ExecStop=/usr/local/redis/bin/redis-server -s stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

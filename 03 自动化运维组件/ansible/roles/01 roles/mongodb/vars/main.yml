@@ -1,0 +1,38 @@
+---
+# vars file for mongodb
+
+# mongod install path
+var_installpath: /usr/local
+
+# mongod listen address 
+var_listen_address: "0.0.0.0"
+
+# mongod worker path
+var_workerpath: /usr/local/mongodb
+var_runscript: /root/
+
+# mongod service path
+var_servicepath: /usr/lib/systemd/system/mongod.service
+
+# mongod data and logs path
+var_conf_path: /usr/local/mongodb/conf
+var_mongos_logs_path: /usr/local/mongodb/mongos/log
+var_config_data_path: /usr/local/mongodb/config/data
+var_config_logs_path: /usr/local/mongodb/config/log
+var_shard1_data_path: /usr/local/mongodb/shard1/data
+var_shard1_logs_path: /usr/local/mongodb/shard1/log
+var_shard2_data_path: /usr/local/mongodb/shard2/data
+var_shard2_logs_path: /usr/local/mongodb/shard2/log
+var_shard3_data_path: /usr/local/mongodb/shard3/data
+var_shard3_logs_path: /usr/local/mongodb/shard3/log
+
+# replica name and port
+var_configs_name: configs
+var_configs_port: "21000"
+var_shard1_name: shard1
+var_shard1_port: "27001"
+var_shard2_name: shard2
+var_shard2_port: "27002"
+var_shard3_name: shard3
+var_shard3_port: "27003"
+var_mongos_port: "20000"

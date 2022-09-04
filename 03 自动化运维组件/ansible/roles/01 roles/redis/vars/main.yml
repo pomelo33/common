@@ -1,0 +1,25 @@
+---
+# vars file for redis
+# redis basedir
+var_basedir: /usr/local
+
+# redis worker dir
+var_workerdir: /usr/local/redis
+# redis config path
+var_configpath: /usr/local/redis/conf/redis.conf
+
+# redis data and logs path
+var_datapath: /data/redis/6379/
+var_logspath: /data/redis/6379/logs/
+var_logsfile: /data/redis/6379/logs/redis.log
+# redis listen address
+var_listenaddress: "0.0.0.0"
+
+# redis listen port
+var_listenport: "6379"
+var_pidpath: /var/run/redis.pid
+
+# redis password
+# var_requirepass: "123456"
+
+var_servicepath: /usr/lib/systemd/system/redis.service

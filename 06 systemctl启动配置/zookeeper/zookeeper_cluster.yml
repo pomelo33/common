@@ -1,0 +1,47 @@
+version: '3.4'
+services:
+  zoo1:
+    image: zookeeper:3.3.6
+    ports: 2181
+    restart: always
+    hostname: zoo1
+    networks:
+       zkC:
+         ipv4_address: 172.19.0.10
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /data/zook01/data:/data
+      - /data/zook01/datalog:/datalog
+      - /data/zook01/conf:/conf
+
+  zoo2:
+    image: zookeeper:3.3.6
+    ports: 2181
+    restart: always
+    hostname: zoo2
+    networks:
+       zkC:
+         ipv4_address: 172.19.0.11
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /data/zook02/data:/data
+      - /data/zook02/datalog:/datalog
+      - /data/zook02/conf:/conf
+
+  zoo3:
+    image: zookeeper:3.3.6
+    ports: 2181
+    restart: always
+    hostname: zoo3
+    networks:
+       zkC:
+         ipv4_address: 172.19.0.12
+    volumes:
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - /data/zook03/data:/data
+      - /data/zook03/datalog:/datalog
+      - /data/zook03/conf:/conf
+
+networks:
+    zkC:
+      external: true

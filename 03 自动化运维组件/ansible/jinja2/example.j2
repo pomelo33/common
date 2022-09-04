@@ -1,0 +1,95 @@
+# jinja2语法详解
+
+# 移除jinja2因定义变量、for循环语句等生成的空白行
+# 解决方法： 在block中加入"-"符号。
+# 例如下面写法:
+# {%- if test -%}
+# {%- endif -%}
+
+# jinja2中定义变量
+# {% set <variable_name>=[] %}
+
+# jinja2中for循环语句
+# {% for i in list %}
+# ...
+# {% endfor %}
+
+# jinja2中if..elif..else判断语句
+# {% if ...  %}
+# ...
+# {% elif ... %}
+# ...
+# {% else %}
+# ...
+# {% endif %}
+
+ # jinja2中列表追加元素
+ # <variable_name>.append(<value>)
+
+# {# 检查变量是否被定义，也可以用undefined检查是否未被定义 #}
+# {% if name is defined %}
+#     <p>Name is: {{ name }}</p>
+# {% endif %}
+
+# {# 检查是否所有字符都是大写 #}
+# {% if name is upper %}
+#   <h2>"{{ name }}" are all upper case.</h2>
+# {% endif %}
+
+# {# 检查变量是否为空 #}
+# {% if name is none %}
+#   <h2>Variable is none.</h2>
+# {% endif %}
+
+# {# 检查变量是否为字符串，也可以用number检查是否为数值 #}
+# {% if name is string %}
+#   <h2>{{ name }} is a string.</h2>
+# {% endif %}
+
+# {# 检查数值是否是偶数，也可以用odd检查是否为奇数 #}
+# {% if 2 is even %}
+#   <h2>Variable is an even number.</h2>
+# {% endif %}
+
+# {# 检查变量是否可被迭代循环，也可以用sequence检查是否是序列 #}
+# {% if [1,2,3] is iterable %}
+#   <h2>Variable is iterable.</h2>
+# {% endif %}
+
+# {# 检查变量是否是字典 #}
+# {% if {'name':'test'} is mapping %}
+#   <h2>Variable is dict.</h2>
+# {% endif %}
+
+# 示例文本
+{%- set hostname=[] -%}
+{%- set cluster=[] -%}
+{%- for name in play_hosts -%}
+{{- hostname.append( '"' + name + ':' +  var_connection_port  + '"') -}}
+{{- cluster.append( '"' + name + '"') -}}
+{%- endfor -%}
+{% if es_config['cluster_name'] is undefined %}
+cluster.name: elasticsearch
+{% else %}
+cluster.name: {{ es_config['cluster_name'] }}
+{% endif %}
+{% if es_config['node.name'] is undefined %}
+node.name: {{inventory_hostname}}
+{% else %}
+node.name: {{ es_config['node.name'] }}
+{% endif %}
+node.master: true
+node.data: true
+node.max_local_storage_nodes: {{ groups['es'] | length }}
+path.data: {{ var_datapath }}
+path.logs: {{ var_logspath }}
+network.host: {{ var_listen_address }}
+http.port: {{ var_listen_port }}
+transport.tcp.port: {{ var_connection_port }}
+discovery.seed_hosts: [{{ hostname | join(",") }}]
+cluster.initial_master_nodes: [{{ cluster | join(",") }}]
+bootstrap.system_call_filter: false
+http.cors.allow-origin: "*"
+http.cors.enabled: true
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+http.cors.allow-credentials: true

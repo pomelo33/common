@@ -1,0 +1,15 @@
+---
+- hosts: es
+  remote_user: root
+  tasks:
+    - name: create user
+      user: 
+        name: "{{ item.name }}"
+        password: "{{ item.pass | password_hash('sha512') }}"
+        state: present
+      with_items:
+        - { name: "elastic" ,pass: "elastic" }
+    - name: check user
+      shell: getent passwd {{ item }}
+      with_items:
+        - elastic

@@ -1,0 +1,65 @@
+- name: modify hosts
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"
+
+- name: copy zookeeper packages
+  copy:
+    src: "{{ var_packagename }}"
+    dest: "/tmp/{{ var_packagename }}"
+
+- name: unzip packages
+  unarchive:
+    src: "/tmp/{{ var_packagename }}"
+    dest: "{{ var_installpath }}"
+    copy: no
+  ignore_errors: True
+
+- name: rename dir
+  shell: mv "{{ var_installpath }}/{{ var_packageshortname }}"  "{{ var_workerpath }}"
+
+- name: create datadir
+  file:
+    path: "{{ var_datapath }}"
+    state: directory
+
+- name: Create zookeeper single config
+  template:
+    src: zoo.cfg.j2
+    dest: "{{ var_workerpath }}/conf/zoo.cfg"
+    mode: 0644
+  when: 
+    - "(groups['zookeeper'] | length) == 1"
+
+- name: Create zookeeper cluster config
+  template:
+    src: zoo.cluster.cfg.j2
+    dest: "{{ var_workerpath }}/conf/zoo.cfg"
+    mode: 0644
+  when: 
+    - "(groups['zookeeper'] | length) > 1"
+
+- name: Create zookeeper myid
+  template:
+    src: myid.j2
+    dest: "{{ var_datapath }}/myid"
+  when: 
+    - "(groups['zookeeper'] | length) > 1"
+
+- name: copy zookeeper service
+  template:
+    src: zookeeper.service.j2
+    dest: "{{ var_servicefile }}"
+    mode: 0644
+  notify:
+    - reload system configuration
+    - start zookeeper serivce
+
+- name: Delete zookeeper package
+  file:
+    path: "/tmp/{{ var_packagename }}"
+    state: absent

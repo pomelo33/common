@@ -1,0 +1,11 @@
+[Unit]
+Description=start mongo cluster
+After=network.target
+
+[Service]
+ExecStart={{ var_runscript }}/run_mongoCluster.sh start
+ExecStop={{ var_runscript }}/run_mongoCluster.sh stop
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

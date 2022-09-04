@@ -1,0 +1,16 @@
+- name: stoppped mariadb
+  service:
+     name: mariadb
+     state: stopped
+- name: disable mariadb
+  service:
+     name: mariadb
+     enabled: no
+- name: uninstall mariadb mariadb-server
+  yum:
+    name: [mariadb,mariadb-server]
+    state: absent
+- name: delete directory
+  file: 
+    name: /var/lib/mysql
+    state: absent 

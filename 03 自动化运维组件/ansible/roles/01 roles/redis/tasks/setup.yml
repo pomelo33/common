@@ -1,0 +1,44 @@
+- name: modify hosts
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"
+
+- name: Copy redis package
+  copy:
+    src: redis.tar.gz
+    dest: /tmp/redis.tar.gz
+
+- name: Unzip package
+  unarchive:
+    src: /tmp/redis.tar.gz
+    dest: "{{ var_basedir }}"
+    copy: no
+
+- name: Create data and logs dir
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_datapath }}"
+    - "{{ var_logspath }}"
+
+- name: Create redis configuration
+  template:
+    src: redis.conf.j2
+    dest: "{{ var_configpath }}"
+    backup: yes
+- name: Create redis service file
+  template:
+    src: redis.service.j2
+    dest: "{{ var_servicepath }}"
+  notify:
+    - reload system configuration
+    - start redis service
+- name: Remove redis package
+  file:
+    path: /tmp/redis.tar.gz
+    state: absent

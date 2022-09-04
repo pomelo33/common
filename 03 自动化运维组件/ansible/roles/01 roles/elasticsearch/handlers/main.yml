@@ -1,0 +1,11 @@
+---
+# handlers file for elasticsearch_cluster
+- name: reload systemd configuration
+  systemd:
+    daemon_reload: true
+
+- name: restart elasticsearch
+  service: 
+    name: elasticsearch
+    state: started 
+    enabled: yes

@@ -1,0 +1,12 @@
+# path: /usr/lib/systemd/system/redis.service
+[Unit]
+Description=start mongo cluster
+After=network.target
+
+[Service]
+ExecStart=/root/start_redis.sh start all
+ExecStop=/root/start_redis.sh stop all
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

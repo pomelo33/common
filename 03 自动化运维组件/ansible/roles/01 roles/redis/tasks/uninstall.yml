@@ -1,0 +1,31 @@
+- name: Remove redis package
+  file:
+    path: /tmp/redis.tar.gz
+    state: absent
+  ignore_errors: True
+- name: Stop redis servivce
+  service:
+    name: redis
+    state: stopped
+    enabled: no
+  ignore_errors: True
+- name: Remove redis service file
+  file:
+    path: "{{ var_servicepath }}"
+    state: absent
+  ignore_errors: True
+- name: Remove Redis workerdir
+  file:
+    path: "{{ var_workerdir }}"
+    state: absent
+  ignore_errors: True
+
+- name: Delete redis hosts
+  lineinfile:
+    path: /etc/hosts
+    state: absent
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"
+  ignore_errors: True

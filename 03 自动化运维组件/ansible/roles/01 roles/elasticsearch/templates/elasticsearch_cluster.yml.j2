@@ -1,0 +1,31 @@
+{%- set discovery_hosts=[] -%}
+{%- set cluster_nodes=[] -%}
+{%- for name in play_hosts -%}
+    {{- discovery_hosts.append('"' + name + ':' +  var_signal_communication  + '"') -}}
+    {{- cluster_nodes.append('"' + name + '"') -}}
+{%- endfor -%}
+{% if es_config['cluster.name'] is undefined %}
+cluster.name: elasticsearch
+{% else %}
+cluster.name: {{ es_config['cluster.name'] }}
+{% endif %}
+{% if es_config['node.name'] is undefined %}
+node.name: {{ inventory_hostname }}
+{% else %}
+node.name: {{ es_config['node.name'] }}
+{% endif %}
+node.master: true
+node.data: true
+node.max_local_storage_nodes: {{ groups['elasticsearch'] | length }}
+path.data: {{ var_datapath }}
+path.logs: {{ var_logspath }}
+network.host: {{ var_listen_address }}
+http.port: {{ var_listen_port }}
+transport.tcp.port: {{ var_signal_communication }}
+discovery.seed_hosts: [ {{ discovery_hosts| join(",") }} ]
+cluster.initial_master_nodes: [ {{ cluster_nodes| join(",") }} ]
+bootstrap.system_call_filter: false
+http.cors.allow-origin: "*"
+http.cors.enabled: true
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+http.cors.allow-credentials: true

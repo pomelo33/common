@@ -1,0 +1,13 @@
+[Unit]
+Description=Redis
+After=network.target
+
+[Service]
+Type=forking
+ExecStart={{ var_workerdir }}/bin/redis-server {{ var_configpath }}
+ExecReload={{ var_workerdir }}/bin/redis-server -s reload
+ExecStop={{ var_workerdir }}/bin/redis-server -s stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,38 @@
+- name: Stop zookeeper service
+  service:
+    name: zookeeper
+    state: stopped
+    enabled: no
+  ignore_errors: True
+
+- name: Delete zookeeper datadir
+  file:
+    path: "{{ var_datapath }}"
+    state: absent
+  ignore_errors: True
+
+- name: Delete zookeeper worker dir
+  file:
+    path: "{{ var_workerpath }}"
+    state: absent
+  ignore_errors: True
+
+- name: Delete zookeeper service file
+  file:
+    path: "{{ var_servicefile }}"
+    state: absent
+  ignore_errors: True
+
+- name: Reload system configuration
+  systemd:
+    daemon_reload: yes
+
+- name: Delete zookeeper hosts
+  lineinfile:
+    path: /etc/hosts
+    state: absent
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"
+  ignore_errors: True

@@ -1,0 +1,49 @@
+admin启动脚本
+#vi  /home/weblogic/start/start_sootwer_admin.sh
+#!/bin/bash
+DATE=`date +%Y%m%d%H%M%S`      
+user=`whoami`
+logDir=/app/logs/dljy                         #启动日志存放路径dljy是例子系统简称#
+logDestdir=/app/logs/archivelog/dljy             #启动日志归档路径# 
+domainBase=/app/weblogic/user_projects/domains  #domian所在路径#
+domainName=test11g_domain                   #domain名称#
+adminUrl=10.1.17.10                          #控制台IP地址#
+adminPort=27001                             #控制台端口#
+serverName=dljyAdmin                         #节点名称#
+
+if [ "$user" = "root" ]; then
+    echo "root 不能执行此操作"
+else
+        pid=`ps -ef|grep "Name=$serverName"|grep -v grep|awk '{print $2}'`
+        if [ $pid ] ; then
+                echo "service still active, killing..."
+                kill -9 $pid    
+        else            
+                echo "sevice stopped."
+        fi
+cd $logDir
+gzip -c $serverName.log > $logDestdir/${DATE}_$serverName.gz
+
+cat /dev/null > $serverName.log
+sleep 3
+
+cd $domainBase/$domainName/bin
+export USER_MEM_ARGS="-Xms2048m -Xmx2048m -XX:MaxPermSize=512m -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./heapdump_${serverName}_`date +%Y%m%d%H%M%S`.hprof  -Xloggc:gc_${serverName}_`date +%Y%m%d%H%M%S`.log"
+
+nohup ./startWebLogic.sh > $logDir/$serverName.log &
+tail -f $logDir/$serverName.log
+fi
+
+
+
+
+
+
+
+
+
+
+
+linux这么加----------------在setDomainEnv.sh中  在  export BEA_JAVA_HOME  下面添加以下两句
+export PRE_CLASSPATH="${DOMAIN_HOME}/lib/antlr-2.7.6.jar"
+export CLASSPATH=$PRE_CLASSPATH:$CLASSPATH

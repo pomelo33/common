@@ -1,0 +1,11 @@
+---
+# handlers file for redis
+- name: reload system configuration
+  systemd:
+    daemon_reload: yes
+
+- name: start redis service
+  service:
+    name: redis
+    state: restarted
+    enabled: yes

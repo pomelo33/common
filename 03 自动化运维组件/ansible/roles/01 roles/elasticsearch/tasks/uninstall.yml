@@ -1,0 +1,52 @@
+- name: stop server
+  service:
+    name: elasticsearch
+    state: stopped
+  ignore_errors: True
+
+- name: Delete elasticseach service
+  file:
+    path: "{{ var_servicepath }}/elasticsearch.service"
+    state: absent
+  ignore_errors: True
+
+- name: Delete elasticsearch workerdir
+  file:
+    path: "{{ var_workerpath }}"
+    state: absent
+  ignore_errors: True
+
+- name: Delete elasticsearch datadir
+  file:
+    path: "{{ var_datapath }}"
+    state: absent
+  ignore_errors: True
+
+- name: Delete elasticsearch logsdir
+  file:
+    path: "{{ var_logspath }}"
+    state: absent
+  ignore_errors: True
+
+- name: Delete elasticsearch dir
+  file:
+    path: "{{ var_datapaths }}"
+    state: absent
+  ignore_errors: True
+
+- name: delete user
+  user:
+    name: "{{ item }}"
+    state: absent
+  ignore_errors: True
+  with_items:
+    - "{{ var_username }}"
+
+- name: Delete elasticsearch hosts
+  lineinfile:
+    path: /etc/hosts
+    state: absent
+    line: "{{ item.value.ansible_ssh_host }} {{item.value.ansible_hostname }}"
+  no_log: True
+  with_dict:
+    - "{{ hostvars }}"

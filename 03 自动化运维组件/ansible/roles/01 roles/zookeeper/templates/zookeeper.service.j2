@@ -1,0 +1,15 @@
+[Unit]
+Description=Zookeeper Service unit Configuration
+After=network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME={{ var_jdkpath }}
+ExecStart={{ var_workerpath }}/bin/zkServer.sh start {{ var_workerpath }}/conf/zoo.cfg
+ExecStop={{ var_workerpath }}/bin/zkServer.sh stop
+KillMode=none
+User=root
+Group=root
+Restart=always
+[Install]
+WantedBy=multi-user.target
