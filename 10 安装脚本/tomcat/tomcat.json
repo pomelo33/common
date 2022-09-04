@@ -1,0 +1,20 @@
+{
+    "base":{
+        "tomcat_package":"/tmp",
+        "tomcat_user":"weblogic",
+        "tomcat_group":"weblogic",
+        "tomcat_user_pwd":"123456",
+        "tomcat_dir":"/app/fdprd/tomcat9",
+        "version":"9.0.14"
+    },
+    "jvm":{
+        "java_home":"/usr/java/jdk1.8.0_261",
+        "currentuser":"",
+        "log_path":"/app/fdprd/tomcat9014/logs",
+        "log_options":"-XX:HeapDumpPath=$LOG_PATH/heapdump.$$.hprof -XX:+HeapDumpOnOutOfMemoryError -XX:ErrorFile=$LOG_PATH/hs_err_pid.$$.log",
+        "LOG_OPTIONS":"",
+        "java_opts":"-Xms1024m -Xmx1024m -Xmn1024m -XX:MetaspaceSize=1024m -XX:MaxMetaspaceSize=1024m -XX:+ExplicitGCInvokesConcurrentAndUnloadsClasses -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=60 -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+CMSClassUnloadingEnabled -XX:MaxTenuringThreshold=15  -XX:SurvivorRatio=8 -XX:ParallelGCThreads=4",
+        "app_options":"-Djava.security.egd=file:/dev/./urandom",
+        "CATALINA_OPTS":"-Dcom.sun.management.jmxremote.port=7441 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false",
+    }
+}

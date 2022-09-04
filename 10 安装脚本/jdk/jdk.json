@@ -1,0 +1,10 @@
+{
+    "package":{
+        "version":"8u261"
+    },
+    "basedir":"/usr/java",
+    "user":"root",
+    "java":{
+        "version":"1.8.0_261"
+    }
+}

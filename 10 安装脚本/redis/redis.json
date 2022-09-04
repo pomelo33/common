@@ -1,0 +1,49 @@
+{
+	"redis_basedir":"/app/fdprd/redis/redis504",
+	"redis_user":"fdprd",
+	"redis_group":"fdprd",
+	"software_config":{
+		"redis_port":6379,
+		"reis_pidfile":"",
+		"redis_daemonize":"yes",
+		"redis_logfile":"",
+		"redis_bind":"0.0.0.0",
+		"redis_rdbcompression":"yes",
+		"redis_rdbchecksum":"yes",
+		"redis_appendonly":"no",
+		"redis_dbfilename":"",
+		"redis_dir":"/app/fdprd/redis/redis504/",
+		"redis_requirepass":"123456",
+		"redis_replica_serve_stale_data":"yes",
+		"redis_replica_read_only":"yes",
+		"redis_repl_diskless_sync":"no",
+		"redis_repl_diskless_sync_delay":5,
+		"redis_repl_disable_tcp_nodelay":"no",
+		"redis_replica_priority":"100",
+		"redis_protected_mode":"no",
+		"redis_tcp_backlog":"1024",
+		"redis_timeout":"0",
+		"redis_tcp_keepalive":"300",
+		"redis_supervised":"no",
+		"redis_databases":16,
+		"redis_always_show_logo":"yes",
+		"redis_stop_writes_on_bgsave_error":"yes"
+	},
+	"Installation_mode":"stand",
+	"version":"5.0.9",
+    "redis_master":{
+        "redis_ip":"0.0.0.0"
+    },
+    "redis_slave":{
+        "redis_replicaof":"0.0.0.0 6379",
+        "redis_masterauth":"123456"
+	},
+	"sentinel_config":{
+		"sentinel_port":26379,
+		"sentinel_pidfile":"",
+		"sentinel_deny_scripts_reconfig":"yes",
+		// 填写master的ip，2代表有两个哨兵认为节点down，就进行切换
+		"sentinel_monitor":"mymaster x.x.x.x 6379 2",
+		"sentinel_auth":"mymaster 123456"
+	}
+}

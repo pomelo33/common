@@ -1,0 +1,27 @@
+{
+    "apache":{
+        "user": "fdprd",
+        "group": "fdprd",
+        "userpasswd": "123456",
+        "dir": "/app/fdprd/apache",
+        "httpd_version": "2.4.38",
+        "apr_version": "1.6.2",
+        "apr_util_version": "1.6.1",
+        "openssl_version": "1.1.1",
+        "pcre_version": "8.42"
+    },
+    "install":{
+        "apr": "--prefix=/app/fdprd/apache/apr-httpd/",
+        "apr_util": "--prefix=/app/fdprd/apache/apr-util-httpd/ --with-apr=/app/fdprd/apache/apr-httpd/",
+        "openssl": "-fPIC --prefix=/app/fdprd/apache/openssl/ enable-shared",
+        "pcre": "--prefix=/app/fdprd/apache/pcre-httpd/",
+        "httpd": "--with-apr=/app/fdprd/apache/apr-httpd/ --with-apr-util=/app/fdprd/apache/apr-util-httpd/ --with-pcre=/app/fdprd/apachepcre-httpd/ --prefix=/app/fdprd/apache/apache-2.4.38 --enable-so --enable-mods-shared=all --enable-ssl=shared --with-mpm=worker --disable-cgi --disable-cgid --with-ssl=/app/fdprd/apache/openssl/"
+    },
+    "config": {
+        "apache_listen_port": "8000",
+        "apache_listen_ip": "172.24.6.98",
+        "loglevel": "notice",
+        "customlog": "    CustomLog \"|/app/fdprd/apache/apache-2.4.38/bin/rotatelogs /app/fdprd/apache/apache-2.4.38/logs/access_log.%Y-%m-%d-%H_%M_%S 86400 480\" common"
+    }
+
+}
